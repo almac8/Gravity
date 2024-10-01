@@ -7,14 +7,16 @@ class Body {
   velocity: Vector2;
   acceleration: Vector2;
   impulse: Vector2;
+  mass: number;
 
   constructor(renderingContext: CanvasRenderingContext2D) {
     this.renderingContext = renderingContext;
 
-    this.position = new Vector2(this.renderingContext.canvas.width / 2, this.renderingContext.canvas.height / 2);
+    this.position = new Vector2();
     this.velocity = new Vector2();
     this.acceleration = new Vector2();
     this.impulse = new Vector2();
+    this.mass = 0;
   }
 
   update(deltatime: number) {
@@ -30,7 +32,7 @@ class Body {
   render() {
     this.renderingContext.beginPath();
     this.renderingContext.fillStyle = 'darkolivegreen'
-    this.renderingContext.arc(this.position.x, this.position.y, 50, 0, 2 * Math.PI);
+    this.renderingContext.arc(this.position.x, this.position.y, this.mass, 0, 2 * Math.PI);
     this.renderingContext.fill();
   }
 }

@@ -1,20 +1,22 @@
-import Body from "./Body";
+import GravityGroup from "./GravityGroup";
 
 class Scene {
   renderingContext: CanvasRenderingContext2D;
-  body: Body;
+
+  gravityGroup: GravityGroup;
 
   constructor(renderingContext: CanvasRenderingContext2D) {
     this.renderingContext = renderingContext;
-    this.body = new Body(this.renderingContext);
+
+    this.gravityGroup = new GravityGroup(this.renderingContext);
   }
 
   update(deltatime: number) {
-    this.body.update(deltatime);
+    this.gravityGroup.update(deltatime);
   }
 
   render() {
-    this.body.render();
+    this.gravityGroup.render();
   }
 }
 
