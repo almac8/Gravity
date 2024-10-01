@@ -1,17 +1,38 @@
+import Scene from "./Scene";
+
 class Engine {
   renderingContext: CanvasRenderingContext2D;
+  previousTime: number;
+  scene: Scene;
 
   constructor(renderingContext: CanvasRenderingContext2D) {
     this.renderingContext = renderingContext;
+    this.previousTime = 0;
+    this.scene = new Scene(this.renderingContext);
   }
 
   start() {
-    console.log('Starting Engine');
+    this.previousTime = Date.now();
+    requestAnimationFrame(() => this.gameloop());
+  }
 
-    this.renderingContext.beginPath();
-    this.renderingContext.fillStyle = 'darkolivegreen'
-    this.renderingContext.arc(this.renderingContext.canvas.width / 2, this.renderingContext.canvas.height / 2, 50, 0, 2 * Math.PI);
-    this.renderingContext.fill();
+  gameloop() {
+    const currentTime = Date.now();
+    const deltatime = currentTime - this.previousTime;
+    this.previousTime = currentTime;
+
+    this.update(deltatime);
+    this.render();
+
+    requestAnimationFrame(() => this.gameloop());
+  }
+
+  update(deltatime: number) {
+    this.scene.update(deltatime);
+  }
+
+  render() {
+    this.scene.render();
   }
 }
 
