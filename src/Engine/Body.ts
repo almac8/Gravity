@@ -8,6 +8,8 @@ class Body {
   acceleration: Vector2;
   impulse: Vector2;
   mass: number;
+  momentum: Vector2;
+  static: boolean;
 
   constructor(renderingContext: CanvasRenderingContext2D) {
     this.renderingContext = renderingContext;
@@ -17,16 +19,22 @@ class Body {
     this.acceleration = new Vector2();
     this.impulse = new Vector2();
     this.mass = 0;
+    this.momentum = new Vector2();
+    this.static = false;
   }
 
   update(deltatime: number) {
-    this.acceleration = this.acceleration.add(this.impulse);
-
-    this.velocity = this.velocity.add(this.acceleration.multiply(deltatime));
-    this.position = this.position.add(this.velocity.multiply(deltatime));
-
-    this.acceleration = this.acceleration.subtract(this.impulse);
-    this.impulse = new Vector2();
+    if(!this.static) {
+      this.acceleration = this.acceleration.add(this.impulse);
+      
+      this.velocity = this.velocity.add(this.acceleration.multiply(deltatime));
+      this.position = this.position.add(this.velocity.multiply(deltatime));
+      
+      this.acceleration = this.acceleration.subtract(this.impulse);
+      this.impulse = new Vector2();
+      
+      this.momentum = this.velocity.multiply(this.mass);
+    }
   }
 
   render() {

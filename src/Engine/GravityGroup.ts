@@ -4,7 +4,7 @@ import Vector2 from "./Vector2";
 class GravityGroup {
   renderingContext: CanvasRenderingContext2D;
   
-  bodyCount = 10;
+  bodyCount = 4;
   gravitationalConstant = 0.01;
   
   bodies: Body[];
@@ -16,8 +16,9 @@ class GravityGroup {
     this.bodies = [];
     this.gravityPairs = [];
 
-    //  this.initializeTestBodies();
-    this.initializeRandomBodies();
+    this.initializeTestBodies();
+    //  this.initializeRandomBodies();
+    
     this.initializeGravityPairs();
   }
 
@@ -27,11 +28,21 @@ class GravityGroup {
       this.bodies.push(body);
     }
 
-    this.bodies[0].position = new Vector2(200, 100);
-    this.bodies[1].position = new Vector2(400, 100);
+    this.bodies[0].position = new Vector2(this.renderingContext.canvas.width / 2, this.renderingContext.canvas.height / 2);
+    this.bodies[0].mass = 100;
+    this.bodies[0].static = true;
 
-    this.bodies[0].mass = 25;
-    this.bodies[1].mass = 25;
+    this.bodies[1].position = new Vector2(this.renderingContext.canvas.width / 2 + 200, this.renderingContext.canvas.height / 2);
+    this.bodies[1].mass = 1;
+    this.bodies[1].velocity = new Vector2(0, -0.05);
+
+    this.bodies[2].position = new Vector2(this.renderingContext.canvas.width / 2 - 400, this.renderingContext.canvas.height / 2);
+    this.bodies[2].mass = 5;
+    this.bodies[2].velocity = new Vector2(0, 0.1);
+
+    this.bodies[3].position = new Vector2(this.renderingContext.canvas.width / 2 - 370, this.renderingContext.canvas.height / 2);
+    this.bodies[3].mass = 1;
+    this.bodies[3].velocity = new Vector2(0, 0.07);
   }
 
   initializeRandomBodies() {
@@ -82,7 +93,21 @@ class GravityGroup {
       body_1.impulse = body_1.impulse.add(gravitationalImpulse_1);
       body_2.impulse = body_2.impulse.add(gravitationalImpulse_2);
     } else {
-      //  Collision
+      const totalMomentum = body_1.momentum.add(body_2.momentum);
+      const totalMass = body_1.mass + body_2.mass;
+      const finalVelocity = totalMomentum.divide(totalMass);
+
+      body_1.mass = body_1.mass + body_2.mass;
+      body_2.mass = 0;
+
+      body_1.impulse = new Vector2();
+      body_2.impulse = new Vector2();
+
+      body_1.acceleration = new Vector2();
+      body_2.acceleration = new Vector2();
+
+      body_1.velocity = finalVelocity;
+      body_2.velocity = finalVelocity;
     }
   }
 
